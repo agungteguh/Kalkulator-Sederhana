@@ -1,4 +1,4 @@
-# belajarflutter_1
+# belajarflutter_2 Kalkulator sederhana
 
 A new Flutter project.
 
