@@ -16,9 +16,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Kalkulator',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
+      theme:  ThemeData(
+              scaffoldBackgroundColor: Colors.white
+              ),
       home: MyLoginPage(),
     );
   }

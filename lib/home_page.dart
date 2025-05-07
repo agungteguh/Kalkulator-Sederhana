@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyKalkulatorHomePage extends StatefulWidget {
   const MyKalkulatorHomePage({super.key});
@@ -8,22 +9,52 @@ class MyKalkulatorHomePage extends StatefulWidget {
 }
 
 class _MyKalkulatorHomePageState extends State<MyKalkulatorHomePage> {
+  bool _isDarkMode = false;
+
   final TextEditingController firstController = TextEditingController();
   final TextEditingController secondController = TextEditingController();
   double hasil = 0;
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadTheme();
+  }
+
+  Future<void> _loadTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
+    });
+  }
+
+  Future<void> _toggleTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+    });
+    await prefs.setBool('isDarkMode', _isDarkMode);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Kalkulator Sederhana'),
-        backgroundColor: Colors.green,
+        //backgroundColor: Colors.green,
       ),
       body: Container(
         padding: EdgeInsets.all(20),
-        color: Colors.lightGreenAccent,
+        color: _isDarkMode ? Colors.red : Colors.blue,
         child: Column(
           children: [
+            Container(
+            margin: const EdgeInsets.only(right: 0, top:10),
+            child: SwitchListTile(
+              value: _isDarkMode,
+              onChanged: (value) => _toggleTheme(),
+            ),  
+            ),
             const SizedBox(
               height: 10,
             ),
@@ -113,6 +144,7 @@ class _MyKalkulatorHomePageState extends State<MyKalkulatorHomePage> {
                 ..strokeJoin = StrokeJoin.round
               ),
             ),
+
           ],
         ),
       ),
