@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1030291526053",
+    "project_id": "fir-xflutterxauth",
+    "storage_bucket": "fir-xflutterxauth.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030291526053:android:e45b3c92e10176a5c6d84c",
+        "android_client_info": {
+          "package_name": "com.example.belajarflutter_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA20o3MmS5D91lhJq3Q5CIdHe1B8gzAzI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

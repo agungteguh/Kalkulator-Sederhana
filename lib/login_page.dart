@@ -1,5 +1,6 @@
 import 'package:belajarflutter_1/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyLoginPage extends StatefulWidget {
   const MyLoginPage({super.key});
@@ -13,6 +14,40 @@ class _MyLoginPageState extends State<MyLoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final _auth = FirebaseAuth.instance;
+
+  Future<void> _handleLogin() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login berhasil!')),
+      );
+
+        Navigator.push(context, 
+        MaterialPageRoute(builder: (context) => MyKalkulatorHomePage())
+          );
+      }
+     
+
+    } catch (e) {
+      if(mounted) {
+        // Handle login error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login gagal: ${e.toString()}')),
+        );
+      }
+    }
+  }
+
+  /*
   @override
   void dispose() {
     _emailController.dispose();
@@ -43,6 +78,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
           });
       }
   }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -294,8 +330,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 width: 326,
                 padding: const EdgeInsets.all(4),
                 child: ElevatedButton(
-                  onPressed: () => login(_emailController.text.toString(),
-                  _passwordController.text.toString()),
+                  onPressed: _handleLogin,
+                  /*onPressed: () => login(_emailController.text.toString(),
+                  _passwordController.text.toString()),*/
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromRGBO(3, 134, 208, 1),
                     shape: RoundedRectangleBorder(
@@ -322,6 +359,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
             const SizedBox(
               height: 20,
             ),
+            /*
             Text(notif,
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -329,9 +367,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
               fontSize: 15,
               ),
             ),
-
+            */
               // Or Connect With Section
-              Container(
+            Container(
                 margin: const EdgeInsets.only(top: 8),
                 child: Stack(
                   alignment: Alignment.center,
