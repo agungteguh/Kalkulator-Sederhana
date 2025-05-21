@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'bmkg_service.dart';
+import 'gempa_model.dart';
 
 class MyKalkulatorHomePage extends StatefulWidget {
   const MyKalkulatorHomePage({super.key});
@@ -10,15 +12,19 @@ class MyKalkulatorHomePage extends StatefulWidget {
 
 class _MyKalkulatorHomePageState extends State<MyKalkulatorHomePage> {
   bool _isDarkMode = false;
-
+  
   final TextEditingController firstController = TextEditingController();
   final TextEditingController secondController = TextEditingController();
   double hasil = 0;
   
+  final BMKGService _service = BMKGService();
+  late Future<Gempa> futureGempa;
+
   @override
   void initState() {
     super.initState();
     _loadTheme();
+    futureGempa = _service.fetchGempa();
   }
 
   Future<void> _loadTheme() async {
@@ -40,7 +46,8 @@ class _MyKalkulatorHomePageState extends State<MyKalkulatorHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Kalkulator Sederhana'),
+        leading: Image.network('https://upload.wikimedia.org/wikipedia/id/4/44/Logo_PENS.png'), 
+        title: const Text('Kalkulator X Prediksi Gempa'),
         //backgroundColor: Colors.green,
       ),
       body: Container(
@@ -144,7 +151,34 @@ class _MyKalkulatorHomePageState extends State<MyKalkulatorHomePage> {
                 ..strokeJoin = StrokeJoin.round
               ),
             ),
-
+            const SizedBox(
+              height: 20,
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Prediksi Gempa Terbaru :',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  ),
+                ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            FutureBuilder<Gempa>(
+            future: futureGempa,
+            builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final gempa = snapshot.data!;
+                  return Text('${gempa.jam} ${gempa.tanggal}\n${gempa.coordinates} ${gempa.lintang} ${gempa.bujur}\n${gempa.magnitude} sr denga kedalaman ${gempa.kedalaman}\n${gempa.wilayah}\n${gempa.potensi}\n${gempa.dirasakan}');
+              } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+              }
+              return const CircularProgressIndicator();
+             }
+           ),
           ],
         ),
       ),
